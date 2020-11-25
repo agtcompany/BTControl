@@ -2,7 +2,7 @@
 //  SceneDelegate.swift
 //  BTControl
 //
-//  Created by Иван Андриянов on 25.11.2020.
+//  Created by Иван Андриянов on 14.10.2020.
 //
 
 import UIKit
