@@ -26,6 +26,7 @@
 		144B15A5256E47A9006F203C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		144B15A7256E47A9006F203C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		144B15AE256E490A006F203C /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
+		144B15B3256EED5A006F203C /* BTControl.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BTControl.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +59,7 @@
 		144B1598256E479C006F203C /* BTControl */ = {
 			isa = PBXGroup;
 			children = (
+				144B15B3256EED5A006F203C /* BTControl.entitlements */,
 				144B1599256E479C006F203C /* AppDelegate.swift */,
 				144B159B256E479C006F203C /* SceneDelegate.swift */,
 				144B159D256E479C006F203C /* ViewController.swift */,
@@ -290,6 +292,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BTControl/BTControl.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = A9256352V3;
 				INFOPLIST_FILE = BTControl/Info.plist;
@@ -309,6 +312,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BTControl/BTControl.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = A9256352V3;
 				INFOPLIST_FILE = BTControl/Info.plist;
