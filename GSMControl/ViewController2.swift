@@ -27,16 +27,38 @@ extension ViewController2: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         timer2On = true
         switch (textField){
-            case phoneGSM : infoLabel2.text = "Наберите номер телефона AGT-GSM3"
-            case phoneUser : infoLabel2.text = "Наберите номер телефона пользователя"
+            case phoneGSM :
+                if (infoMode){
+                    infoPresent(19)
+                    doneButtonAction()
+                }
+                else { infoLabel2.text = "Наберите номер телефона AGT-GSM3" }
+            case phoneUser :
+                if (infoMode){
+                    infoPresent(20)
+                    doneButtonAction()
+                }
+                else { infoLabel2.text = "Наберите номер телефона пользователя" }
             case password :
-                infoLabel2.text = "Наберите текущий пароль"
+                if (infoMode){
+                    infoPresent(28)
+                    doneButtonAction()
+                }
+                else { infoLabel2.text = "Наберите текущий пароль" }
                 timerOn2(time: 2.0)
             case passwordNew :
-                infoLabel2.text = "Наберите новый пароль"
+                if (infoMode){
+                    infoPresent(26)
+                    doneButtonAction()
+                }
+                else { infoLabel2.text = "Наберите новый пароль" }
                 timerOn2(time: 2.0)
             case passwordNew2 :
-                infoLabel2.text = "Повторите новый пароль"
+                if (infoMode){
+                    infoPresent(27)
+                    doneButtonAction()
+                }
+                else { infoLabel2.text = "Повторите новый пароль" }
                 timerOn2(time: 2.0)
             default : break
         }
@@ -44,7 +66,7 @@ extension ViewController2: UITextFieldDelegate {
 
     func textFieldDidEndEditing(_ textField: UITextField) {
         timer2On = false
-        infoLabel2.text = "Настройка AGT-GSM3"
+        if (!infoMode) { infoLabel2.text = "Настройка AGT-GSM3" }
         
 
         gsmData.phoneNumb[0] = phoneGSM.text!
@@ -80,6 +102,16 @@ extension ViewController2: UITextFieldDelegate {
     }
 }
 class ViewController2: UIViewController, MFMessageComposeViewControllerDelegate, UIPickerViewDataSource, UIPickerViewDelegate {
+    
+    var infoMode = false // Режим справки
+
+    
+    func infoPresent(_ index : Int){
+        let alertError = UIAlertController (title: InfoData().titleText2[index], message: InfoData().messageText2[index], preferredStyle: .alert)
+        let action = UIAlertAction (title: "понятно", style: .cancel, handler: nil )
+        alertError.addAction(action)
+        present(alertError, animated: true, completion: nil)
+    }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -123,25 +155,55 @@ class ViewController2: UIViewController, MFMessageComposeViewControllerDelegate,
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         switch (pickerView) {
         case batInt :
-            gsmData.uBatU = row + 5
-            infoLabel2.text = "Установлено мин. напряжение \(gsmData.uBatU),\(gsmData.uBatUD) В"
-            timerOn(time: 1.50)
+            if (infoMode){
+                batInt.selectRow(_ : gsmData.uBatU - 5, inComponent: 0 , animated: true)
+                infoPresent(21)
+            }
+            else {
+                gsmData.uBatU = row + 5
+                infoLabel2.text = "Установлено мин. напряжение \(gsmData.uBatU),\(gsmData.uBatUD) В"
+                timerOn(time: 1.50)
+            }
         case bat01 :
-            gsmData.uBatUD = row
-            infoLabel2.text = "Установлено мин. напряжение \(gsmData.uBatU),\(gsmData.uBatUD) В"
-            timerOn(time: 1.50)
+            if (infoMode){
+                bat01.selectRow(_ : gsmData.uBatUD, inComponent: 0 , animated: true)
+                infoPresent(22)
+            }
+            else {
+                gsmData.uBatUD = row
+                infoLabel2.text = "Установлено мин. напряжение \(gsmData.uBatU),\(gsmData.uBatUD) В"
+                timerOn(time: 1.50)
+            }
         case tempMin :
-            gsmData.uTempMin = row - 40
-            infoLabel2.text = "Установлена мин. температура \(gsmData.uTempMin) С"
-            timerOn(time: 1.50)
+            if (infoMode){
+                tempMin.selectRow(_ : gsmData.uTempMin + 40, inComponent: 0 , animated: true)
+                infoPresent(23)
+            }
+            else {
+                gsmData.uTempMin = row - 40
+                infoLabel2.text = "Установлена мин. температура \(gsmData.uTempMin) С"
+                timerOn(time: 1.50)
+            }
         case tempMax :
-            gsmData.uTempMax = row - 40
-            infoLabel2.text = "Установлена макс. температура \(gsmData.uTempMax) С"
-            timerOn(time: 1.50)
+            if (infoMode){
+                tempMax.selectRow(_ : gsmData.uTempMax + 40, inComponent: 0 , animated: true)
+                infoPresent(24)
+            }
+            else {
+                gsmData.uTempMax = row - 40
+                infoLabel2.text = "Установлена макс. температура \(gsmData.uTempMax) С"
+                timerOn(time: 1.50)
+            }
         case tempCor :
-            gsmData.uTempCorr = row
-            infoLabel2.text = "Установлена коррекция температуры -\(gsmData.uTempCorr) С"
-            timerOn(time: 1.50)
+            if (infoMode){
+                tempCor.selectRow(_ : gsmData.uTempCorr, inComponent: 0 , animated: true)
+                infoPresent(25)
+            }
+            else {
+                gsmData.uTempCorr = row
+                infoLabel2.text = "Установлена коррекция температуры -\(gsmData.uTempCorr) С"
+                timerOn(time: 1.50)
+            }
         default:
             return
         }
@@ -193,23 +255,72 @@ class ViewController2: UIViewController, MFMessageComposeViewControllerDelegate,
     @IBOutlet var smsSensor: [UIButton]!
     
     @IBAction func returnButton(_ sender: UIButton) {
+        if (infoMode){
+            infoPresent(18)
+            return
+        }
+        NotificationCenter.default.post(name: NSNotification.Name("ReturnVC2"), object: nil)
         self.dismiss(animated: true)
     }
     
     @IBAction func gsmInOutButton(_ sender: UIButton) {
+        if (infoMode){
+            infoPresent(17)
+            return
+        }
         gsmData.gsmOut = !gsmData.gsmOut
         modButton()
+        NotificationCenter.default.post(name: NSNotification.Name("ReturnVC2"), object: nil)
+
     }
     
+    @IBAction func infoButton(_ sender: Any) {
+        infoMode = !infoMode
+        if (infoMode){
+            infoButton.layer.backgroundColor = UIColor.systemGreen.cgColor
+            infoLabel2.text = "Справочно-информационный режим"
+            infoPresent(0)
+        }
+        else {
+            infoButton.layer.backgroundColor = UIColor.systemYellow.cgColor
+            infoLabel2.text = "Настройка AGT-GSM3"
+        }
+    }
     
     @IBAction func uOnOffButton(_ sender: UIButton) {
         let pressedButton = Int(sender.restorationIdentifier!)!
         switch pressedButton {
-        case 15: gsmData.uSMSOtvet = !gsmData.uSMSOtvet
-        case 16: gsmData.uSMSRetr = !gsmData.uSMSRetr
-        case 17: gsmData.uSMSBat = !gsmData.uSMSBat
-        case 18: gsmData.uSMSTempMin = !gsmData.uSMSTempMin
-        case 19: gsmData.uSMSTempMax = !gsmData.uSMSTempMax
+        case 15:
+            if(infoMode) {
+                infoPresent(1)
+                return
+            }
+            gsmData.uSMSOtvet = !gsmData.uSMSOtvet
+            NotificationCenter.default.post(name: NSNotification.Name("ReturnVC2"), object: nil)
+        case 16:
+            if(infoMode) {
+                infoPresent(2)
+                return
+            }
+            gsmData.uSMSRetr = !gsmData.uSMSRetr
+        case 17:
+            if(infoMode) {
+                infoPresent(3)
+                return
+            }
+            gsmData.uSMSBat = !gsmData.uSMSBat
+        case 18:
+            if(infoMode) {
+                infoPresent(4)
+                return
+            }
+            gsmData.uSMSTempMin = !gsmData.uSMSTempMin
+        case 19:
+            if(infoMode) {
+                infoPresent(5)
+                return
+            }
+            gsmData.uSMSTempMax = !gsmData.uSMSTempMax
         default: break
         }
         modButton()
@@ -217,7 +328,14 @@ class ViewController2: UIViewController, MFMessageComposeViewControllerDelegate,
     
     @IBAction func uOnOffSenButton(_ sender: UIButton) {
         let pressedButton = Int(sender.restorationIdentifier!)!
-  
+        if (gsmData.gsmOut && infoMode){
+            infoPresent(pressedButton - 13)
+            return
+        }
+        else if (infoMode){
+            infoPresent(pressedButton - 16)
+            return
+        }
         gsmData.uSMSSen[pressedButton - 22] += 1
         gsmData.uSMSSen[pressedButton - 22] = (gsmData.uSMSSen[pressedButton - 22] == 4) ? 0 : gsmData.uSMSSen[pressedButton - 22]
         modButton()
@@ -225,18 +343,36 @@ class ViewController2: UIViewController, MFMessageComposeViewControllerDelegate,
     
     @IBAction func sendSMSButton(_ sender: UIButton) {
         let pressedButton = Int(sender.restorationIdentifier!)!
-        if (noCheckData()){ return }
+        if (!infoMode){
+            if (noCheckData()){ return }
+        }
         switch pressedButton {
         case 26:
+            if(infoMode){
+                infoPresent(13)
+                return
+            }
             smsString = gsmData.uPass + " " + "R"
             sendSMS()
         case 27:
+            if(infoMode){
+                infoPresent(14)
+                return
+            }
             smsString = gsmData.uPass + " " + "RR"
             sendSMS()
         case 25:
+            if(infoMode){
+                infoPresent(15)
+                return
+            }
             smsString = gsmData.uPass + " " + "U"
             sendSMS()
         case 31:
+            if(infoMode){
+                infoPresent(16)
+                return
+            }
             smsString = gsmData.uPass + " " + "F" + gsmData.phoneNumb[1] + "."
             if (gsmData.uSMSOtvet) { smsString += "1" }
             else { smsString += "0" }
@@ -268,6 +404,10 @@ class ViewController2: UIViewController, MFMessageComposeViewControllerDelegate,
             smsString += "\(String(format:"%1D", (gsmData.uSMSSen[2]))) U"
             sendSMS()
         case 28:
+            if(infoMode){
+                infoPresent(12)
+                return
+            }
             if (passNew.count != 4 || passNew2.count != 4){
               present(alertPasswordBad, animated: true, completion: nil)
             }
@@ -359,7 +499,7 @@ class ViewController2: UIViewController, MFMessageComposeViewControllerDelegate,
                 uOnOffSenButton[i].layer.backgroundColor = UIColor.systemGreen.cgColor
                 uOnOffSenButton[i].setImage(UIImage(systemName: "checkmark"), for: .normal)
                 if (gsmData.gsmOut){
-                    uOnOffSenButton[i].setTitle(gsmData.sensorText[3][gsmData.uSMSSen[i]], for: .normal)
+                    uOnOffSenButton[i].setTitle(gsmData.sensorText[i+3][gsmData.uSMSSen[i]], for: .normal)
 
                 }
                 else {
@@ -374,18 +514,18 @@ class ViewController2: UIViewController, MFMessageComposeViewControllerDelegate,
         returnButton.applyBlueBorder()
         gsmInOutButton.applyBlueBorder()
         if (gsmData.gsmOut){
+            gsmInOutButton.layer.backgroundColor = UIColor.systemGreen.cgColor
             gsmInOutButton.setTitle("AGT-GSM3 отдельный", for: .normal)
-            smsSensor[0].setTitle(" SMS сенсор 1 :", for: .normal)
-            smsSensor[1].setTitle(" SMS сенсор 2 :", for: .normal)
-            smsSensor[2].setTitle(" SMS сенсор 3 :", for: .normal)
-
-
+            smsSensor[0].setTitle(" SMS Сенсор 1 :", for: .normal)
+            smsSensor[1].setTitle(" SMS Сенсор 2 :", for: .normal)
+            smsSensor[2].setTitle(" SMS Сенсор 3 :", for: .normal)
         }
         else {
+            gsmInOutButton.layer.backgroundColor = UIColor.systemYellow.cgColor
             gsmInOutButton.setTitle("AGT-GSM3 встроенный", for: .normal)
-            smsSensor[0].setTitle(" SMS статус АЗ :", for: .normal)
-            smsSensor[1].setTitle(" SMS двигатель :", for: .normal)
-            smsSensor[2].setTitle(" SMS зажигание :", for: .normal)
+            smsSensor[0].setTitle("SMS Автозапуск:", for: .normal)
+            smsSensor[1].setTitle("SMS Двигатель:", for: .normal)
+            smsSensor[2].setTitle("SMS Зажигание:", for: .normal)
         }
         
         phoneGSM.text = gsmData.phoneNumb[0]
